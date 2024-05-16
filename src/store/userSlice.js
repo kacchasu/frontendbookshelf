@@ -1,26 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
-import authService from '../services/authService';
+
+const initialState = {
+    username: null,
+    token: null,
+};
 
 const userSlice = createSlice({
     name: 'user',
-    initialState: { user: null, token: null },
+    initialState,
     reducers: {
-        setUser(state, action) {
-            state.user = action.payload.user;
+        login(state, action) {
+            state.username = action.payload.username;
             state.token = action.payload.token;
         },
         logout(state) {
-            state.user = null;
+            state.username = null;
             state.token = null;
+            localStorage.removeItem('token'); // Clear the token from local storage
         },
     },
 });
 
-export const { setUser, logout } = userSlice.actions;
-
-export const login = (credentials) => async (dispatch) => {
-    const userData = await authService.login(credentials);
-    dispatch(setUser(userData));
-};
+export const { login, logout } = userSlice.actions;
 
 export default userSlice.reducer;

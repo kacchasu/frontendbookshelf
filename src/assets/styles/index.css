@@ -1,86 +1,57 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
+/* Add your existing styles */
+
+.category-selector {
+    margin-bottom: 20px;
 }
 
-.App {
-    text-align: center;
+.category-selector h4 {
+    margin-bottom: 10px;
 }
 
-nav {
-    background-color: #fff;
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-nav a {
-    margin: 0 10px;
-    text-decoration: none;
-    color: #000;
+.category-selector label {
+    display: block;
+    margin-bottom: 5px;
 }
 
 .book-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
 }
 
 .book-card {
-    background-color: #fff;
-    padding: 20px;
-    margin: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 200px;
-}
-
-.bookshelf-list,
-.review-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.bookshelf-item,
-.review-item {
-    background-color: #fff;
-    padding: 20px;
-    margin: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 80%;
-}
-
-button {
-    background-color: #000;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    margin: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #444;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-form label {
-    margin: 10px 0;
-}
-
-form input,
-form textarea {
-    padding: 10px;
-    margin: 5px;
     border: 1px solid #ccc;
+    padding: 10px;
     border-radius: 5px;
-    width: 200px;
+    text-align: center;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 400px;
+    max-width: 100%;
+}
+
+.modal-content form label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.modal-content form button {
+    margin-top: 10px;
+    margin-right: 10px;
 }

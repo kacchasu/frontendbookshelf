@@ -1,13 +1,23 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../store/userSlice';
 
 function Navbar() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate('/login');
+    };
+
     return (
         <nav>
             <Link to="/all-books">All Books</Link>
             <Link to="/my-reviews">My Reviews</Link>
             <Link to="/my-bookshelves">My Bookshelves</Link>
-            <button>Logout</button>
+            <button onClick={handleLogout}>Logout</button>
         </nav>
     );
 }

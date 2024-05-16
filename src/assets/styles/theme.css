@@ -1,0 +1,139 @@
+/* Root variables for theming */
+:root {
+    --primary-color: #000;
+    --secondary-color: #fff;
+    --background-color: #f0f0f0;
+    --text-color: #333;
+    --button-background: #000;
+    --button-text: #fff;
+    --button-hover-background: #444;
+}
+
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+nav {
+    background-color: var(--secondary-color);
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+nav button {
+    background-color: var(--button-background);
+    color: var(--button-text);
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+nav button:hover {
+    background-color: var(--button-hover-background);
+}
+
+/* Book Grid */
+.book-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+.book-card {
+    background-color: var(--secondary-color);
+    padding: 15px;
+    margin: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    text-align: center;
+}
+
+.book-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* Bookshelf List */
+.bookshelf-list,
+.review-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.bookshelf-item,
+.review-item {
+    background-color: var(--secondary-color);
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+}
+
+/* Buttons */
+button {
+    background-color: var(--button-background);
+    color: var(--button-text);
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: var(--button-hover-background);
+}
+
+/* Forms */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+form label {
+    margin: 10px 0;
+}
+
+form input,
+form textarea {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+}
+
+/* Specific Components */
+h1 {
+    font-size: 2em;
+    margin: 20px 0;
+    color: var(--primary-color);
+}
+
+h3 {
+    margin: 10px 0;
+    color: var(--primary-color);
+}

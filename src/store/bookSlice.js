@@ -1,21 +1,49 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import bookService from '../services/bookService';
+
+export const fetchBooks = createAsyncThunk('books/fetchBooks', async () => {
+    const response = await bookService.getAllBooks();
+    return response;
+});
+
+export const saveBook = createAsyncThunk('books/saveBook', async (bookData) => {
+    const response = await bookService.saveBook(bookData);
+    return response;
+});
 
 const bookSlice = createSlice({
     name: 'books',
-    initialState: [],
-    reducers: {
-        setBooks(state, action) {
-            return action.payload;
-        },
+    initialState: {
+        books: [],
+        isLoading: false,
+        error: null,
+    },
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchBooks.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchBooks.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.books = action.payload;
+            })
+            .addCase(fetchBooks.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.message;
+            })
+            .addCase(saveBook.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(saveBook.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.books.push(action.payload);
+            })
+            .addCase(saveBook.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.message;
+            });
     },
 });
-
-export const { setBooks } = bookSlice.actions;
-
-export const fetchBooks = () => async (dispatch) => {
-    const books = await bookService.getAllBooks();
-    dispatch(setBooks(books));
-};
 
 export default bookSlice.reducer;
