@@ -1,16 +1,17 @@
-// src/index.js
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './assets/styles/index.css';
-import App from './App';
-import { store } from './app/store';
 import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
+import store from './store';
+import App from './App';
+import './assets/styles/index.css';
+import './assets/styles/theme.css';  // Import the theme styles
 
 ReactDOM.render(
-    <React.StrictMode>
-        <Provider store={store}>
+    <Provider store={store}>
+        <Router>
             <App />
-        </Provider>
-    </React.StrictMode>,
+        </Router>
+    </Provider>,
     document.getElementById('root')
 );
