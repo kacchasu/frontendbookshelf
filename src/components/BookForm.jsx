@@ -17,7 +17,7 @@ function BookForm({ onClose }) {
             author,
             imageUrl,
             description,
-            categories: categories.split(',').map((cat) => ({ name: cat.trim() })),
+            categories: categories.split(',').map(cat => ({ name: cat.trim() }))
         };
         try {
             await dispatch(saveBook(newBook)).unwrap();
