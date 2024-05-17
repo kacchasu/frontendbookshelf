@@ -25,20 +25,6 @@ function BookDetail({ book, onClose }) {
             <p>{book.author}</p>
             <p>{book.description}</p>
             <p>Categories: {categories.map(category => category.name).join(', ')}</p>
-            <p>Rating: {book.rating}</p>
-            <div>
-                <h3>Reviews</h3>
-                {book.reviews.length > 0 ? (
-                    book.reviews.map(review => (
-                        <div key={review.id}>
-                            <p>{review.user.username}: {review.text}</p>
-                            <p>Rating: {review.rating}</p>
-                        </div>
-                    ))
-                ) : (
-                    <p>No reviews available.</p>
-                )}
-            </div>
         </div>
     );
 }

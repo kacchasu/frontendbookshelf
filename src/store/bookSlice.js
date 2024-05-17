@@ -3,10 +3,7 @@ import bookService from '../services/bookService';
 
 export const fetchBooks = createAsyncThunk('books/fetchBooks', async () => {
     const response = await bookService.getAllBooks();
-    return response.map(book => ({
-        ...book,
-        categories: book.categories || []
-    }));
+    return response;
 });
 
 export const saveBook = createAsyncThunk('books/saveBook', async (bookData) => {

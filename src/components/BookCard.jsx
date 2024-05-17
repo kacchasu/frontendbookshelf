@@ -6,7 +6,6 @@ function BookCard({ book, onClick }) {
             <img src={book.imageUrl} alt={book.title} style={{ width: '100px', height: '150px' }} />
             <h3>{book.title}</h3>
             <p>{book.author}</p>
-            <p>Rating: {book.rating}</p>
         </div>
     );
 }

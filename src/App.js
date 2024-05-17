@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import LoginRegisterPage from './pages/LoginRegisterPage';
 import AllBooksPage from './pages/AllBooksPage';
 import MyBookshelvesPage from './pages/MyBookshelvesPage';
-import MyReviewsPage from './pages/MyReviewsPage';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -20,7 +19,6 @@ function App() {
                     <>
                         <Route path="/all-books" element={<AllBooksPage />} />
                         <Route path="/my-bookshelves" element={<MyBookshelvesPage />} />
-                        <Route path="/my-reviews" element={<MyReviewsPage />} />
                         <Route path="*" element={<Navigate to="/all-books" />} />
                     </>
                 ) : (

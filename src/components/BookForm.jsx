@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import bookService from '../services/bookService';
-import { fetchBooks } from '../store/bookSlice';
-import { fetchCategories } from '../store/categorySlice';
 
 function BookForm({ onClose }) {
-    const dispatch = useDispatch();
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [description, setDescription] = useState('');
-    const [categories, setCategories] = useState('');
+    const [categories, setCategories] = useState([]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,12 +15,10 @@ function BookForm({ onClose }) {
             author,
             imageUrl,
             description,
-            categories: categories.split(',').map(name => ({ name: name.trim() }))
+            categories: categories.map((cat) => ({ name: cat }))
         };
         try {
             await bookService.saveBook(newBook);
-            dispatch(fetchBooks());
-            dispatch(fetchCategories());  // Fetch categories after saving the book
             onClose();
         } catch (error) {
             console.error('Failed to save book:', error);
@@ -35,7 +29,7 @@ function BookForm({ onClose }) {
         <div className="book-form">
             <form onSubmit={handleSubmit}>
                 <label>
-                    Book Name:
+                    Title:
                     <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
                 </label>
                 <label>
@@ -43,7 +37,7 @@ function BookForm({ onClose }) {
                     <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} />
                 </label>
                 <label>
-                    Link to Image:
+                    Image URL:
                     <input type="text" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
                 </label>
                 <label>
@@ -51,11 +45,11 @@ function BookForm({ onClose }) {
                     <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
                 </label>
                 <label>
-                    Categories (comma separated):
+                    Categories:
                     <input
                         type="text"
-                        value={categories}
-                        onChange={(e) => setCategories(e.target.value)}
+                        value={categories.join(', ')}
+                        onChange={(e) => setCategories(e.target.value.split(',').map((cat) => cat.trim()))}
                     />
                 </label>
                 <button type="submit">Add Book</button>
