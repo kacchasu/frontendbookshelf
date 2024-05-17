@@ -1,28 +1,14 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchSharedBookshelves } from '../store/sharedBookshelfSlice';
+import React from 'react';
+import BookshelfSidebar from '../components/BookshelfSidebar';
+import BookshelfBooks from '../components/BookshelfBooks';
 
-function MyBookshelvesPage() {
-    const dispatch = useDispatch();
-    const sharedBookshelves = useSelector((state) => state.sharedBookshelves);
-
-    useEffect(() => {
-        dispatch(fetchSharedBookshelves());
-    }, [dispatch]);
-
+const MyBookshelvesPage = () => {
     return (
-        <div>
-            <h1>My Bookshelves</h1>
-            <div className="bookshelf-list">
-                {sharedBookshelves.map((shelf) => (
-                    <div key={shelf.id} className="bookshelf-item">
-                        <h3>{shelf.name}</h3>
-                        <p>Owner: {shelf.owner.username}</p>
-                    </div>
-                ))}
-            </div>
+        <div className="my-bookshelves-page">
+            <BookshelfSidebar />
+            <BookshelfBooks />
         </div>
     );
-}
+};
 
 export default MyBookshelvesPage;
