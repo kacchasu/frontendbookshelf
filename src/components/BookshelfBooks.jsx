@@ -1,11 +1,19 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchBooksInBookshelf } from '../store/bookshelfSlice';
 import BookCard from './BookCard';
 import ManageAccessModal from './ManageAccessModal';
 
 const BookshelfBooks = () => {
+    const dispatch = useDispatch();
     const { selectedBookshelf, booksInSelectedBookshelf = [] } = useSelector((state) => state.bookshelves);
-    const [showManageAccess, setShowManageAccess] = React.useState(false);
+    const [showManageAccess, setShowManageAccess] = useState(false);
+
+    useEffect(() => {
+        if (selectedBookshelf) {
+            dispatch(fetchBooksInBookshelf(selectedBookshelf.id));
+        }
+    }, [dispatch, selectedBookshelf]);
 
     const handleManageAccessClick = () => {
         setShowManageAccess(true);

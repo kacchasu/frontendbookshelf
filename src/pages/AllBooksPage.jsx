@@ -1,75 +1,59 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBooks } from '../store/bookSlice';
-import { fetchCategories, fetchBooksByCategoryId } from '../store/categorySlice';
+import { fetchCategories } from '../store/categorySlice';
+import { fetchBookshelves, addBookToBookshelf } from '../store/bookshelfSlice';
 import BookCard from '../components/BookCard';
 import BookForm from '../components/BookForm';
 import BookDetail from '../components/BookDetail';
-import bookService from '../services/bookService';
 
-function AllBooksPage() {
+const AllBooksPage = () => {
     const dispatch = useDispatch();
-    const books = useSelector((state) => state.books.books || []);
-    const categories = useSelector((state) => state.categories.categories || []);
-    const [filteredBooks, setFilteredBooks] = useState([]);
+    const books = useSelector((state) => state.books.books);
+    const categories = useSelector((state) => state.categories.categories);
+    const { myBookshelves, sharedBookshelves } = useSelector((state) => state.bookshelves);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [showBookForm, setShowBookForm] = useState(false);
     const [selectedBook, setSelectedBook] = useState(null);
+    const [showAddToBookshelf, setShowAddToBookshelf] = useState(false);
+    const [selectedBookshelf, setSelectedBookshelf] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const booksResponse = await bookService.getAllBooks();
-                dispatch(fetchBooks(booksResponse));
-                dispatch(fetchCategories());
-            } catch (error) {
-                console.error('Failed to fetch data:', error);
-            }
-        };
-        fetchData();
+        dispatch(fetchBooks());
+        dispatch(fetchCategories());
+        const userId = 1; // Replace with actual user ID
+        dispatch(fetchBookshelves(userId));
     }, [dispatch]);
 
-    useEffect(() => {
-        const fetchBooksForCategories = async () => {
-            if (selectedCategories.length === 0) {
-                setFilteredBooks(books);
-                return;
-            }
-
-            try {
-                const promises = selectedCategories.map((categoryId) =>
-                    dispatch(fetchBooksByCategoryId(categoryId))
-                );
-                const results = await Promise.all(promises);
-
-                const combinedBooks = [];
-                results.forEach(result => {
-                    result.payload.forEach(book => {
-                        if (!combinedBooks.some(b => b.id === book.id)) {
-                            combinedBooks.push(book);
-                        }
-                    });
-                });
-
-                setFilteredBooks(combinedBooks);
-            } catch (error) {
-                console.error('Failed to fetch books for selected categories:', error);
-            }
-        };
-
-        fetchBooksForCategories();
-    }, [selectedCategories, books, dispatch]);
-
-    const handleCategoryChange = (categoryId) => {
+    const handleCategoryChange = (category) => {
         setSelectedCategories((prev) =>
-            prev.includes(categoryId)
-                ? prev.filter((id) => id !== categoryId)
-                : [...prev, categoryId]
+            prev.includes(category)
+                ? prev.filter((c) => c !== category)
+                : [...prev, category]
         );
     };
 
+    const filteredBooks = books.filter((book) =>
+        selectedCategories.length === 0 ||
+        book.categories.some((category) => selectedCategories.includes(category.name))
+    );
+
     const handleBookCardClick = (book) => {
         setSelectedBook(book);
+    };
+
+    const handleAddToBookshelf = (book) => {
+        setSelectedBook(book);
+        setShowAddToBookshelf(true);
+    };
+
+    const handleAddBookToBookshelf = () => {
+        if (selectedBookshelf && selectedBook) {
+            dispatch(addBookToBookshelf({ bookshelfId: selectedBookshelf.id, bookId: selectedBook.id }));
+            setShowAddToBookshelf(false);
+            setSelectedBookshelf(null);
+            setSelectedBook(null);
+        }
     };
 
     return (
@@ -80,8 +64,8 @@ function AllBooksPage() {
                     <label key={category.id}>
                         <input
                             type="checkbox"
-                            value={category.id}
-                            onChange={() => handleCategoryChange(category.id)}
+                            value={category.name}
+                            onChange={() => handleCategoryChange(category.name)}
                         />
                         {category.name}
                     </label>
@@ -91,20 +75,45 @@ function AllBooksPage() {
             <div className="book-grid">
                 {filteredBooks.length > 0 ? (
                     filteredBooks.map((book) => (
-                        <BookCard key={book.id} book={book} onClick={() => handleBookCardClick(book)} />
+                        <BookCard key={book.id} book={book} onClick={() => handleBookCardClick(book)} onAddToBookshelf={() => handleAddToBookshelf(book)} />
                     ))
                 ) : (
                     <p>No books available.</p>
                 )}
             </div>
             {showBookForm && (
-                <BookForm onClose={() => setShowBookForm(false)} />
+                <BookForm
+                    onClose={() => setShowBookForm(false)}
+                />
             )}
             {selectedBook && (
-                <BookDetail book={selectedBook} onClose={() => setSelectedBook(null)} />
+                <BookDetail
+                    book={selectedBook}
+                    onClose={() => setSelectedBook(null)}
+                />
+            )}
+            {showAddToBookshelf && (
+                <div className="add-to-bookshelf">
+                    <h2>Add {selectedBook.title} to a Bookshelf</h2>
+                    <select onChange={(e) => setSelectedBookshelf(JSON.parse(e.target.value))}>
+                        <option value="">Select a Bookshelf</option>
+                        {myBookshelves.map((bookshelf) => (
+                            <option key={bookshelf.id} value={JSON.stringify(bookshelf)}>
+                                {bookshelf.name}
+                            </option>
+                        ))}
+                        {sharedBookshelves.map((bookshelf) => (
+                            <option key={bookshelf.id} value={JSON.stringify(bookshelf)}>
+                                {bookshelf.name}
+                            </option>
+                        ))}
+                    </select>
+                    <button onClick={handleAddBookToBookshelf}>Add to Bookshelf</button>
+                    <button onClick={() => setShowAddToBookshelf(false)}>Cancel</button>
+                </div>
             )}
         </div>
     );
-}
+};
 
 export default AllBooksPage;

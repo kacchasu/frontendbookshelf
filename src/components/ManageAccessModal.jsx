@@ -1,54 +1,47 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import bookshelfService from '../services/bookshelfService';
+import { inviteUserToBookshelf, removeUserFromBookshelf } from '../store/bookshelfSlice';
 
 const ManageAccessModal = ({ bookshelf, onClose }) => {
     const dispatch = useDispatch();
-    const [username, setUsername] = useState('');
+    const [inviteUsername, setInviteUsername] = useState('');
+    const [removeUsername, setRemoveUsername] = useState('');
 
-    const handleInvite = async () => {
-        try {
-            await bookshelfService.inviteUserToBookshelf(bookshelf.id, username);
-            onClose();
-        } catch (error) {
-            console.error('Failed to invite user:', error);
+    const handleInviteUser = () => {
+        if (inviteUsername.trim()) {
+            dispatch(inviteUserToBookshelf({ bookshelfId: bookshelf.id, username: inviteUsername }));
+            setInviteUsername('');
         }
     };
 
-    const handleRemoveUser = async (username) => {
-        try {
-            await bookshelfService.removeUserFromBookshelf(bookshelf.id, username);
-            onClose();
-        } catch (error) {
-            console.error('Failed to remove user:', error);
+    const handleRemoveUser = () => {
+        if (removeUsername.trim()) {
+            dispatch(removeUserFromBookshelf({ bookshelfId: bookshelf.id, username: removeUsername }));
+            setRemoveUsername('');
         }
     };
 
     return (
         <div className="modal">
             <div className="modal-content">
-                <h2>Manage Access</h2>
+                <h3>Manage Access</h3>
                 <div>
-                    <label>
-                        Invite User:
-                        <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
-                    </label>
-                    <button onClick={handleInvite}>Invite</button>
+                    <input
+                        type="text"
+                        value={inviteUsername}
+                        onChange={(e) => setInviteUsername(e.target.value)}
+                        placeholder="Invite user by username"
+                    />
+                    <button onClick={handleInviteUser}>Invite</button>
                 </div>
                 <div>
-                    <h3>Current Users:</h3>
-                    <ul>
-                        {bookshelf.users.map((user) => (
-                            <li key={user.id}>
-                                {user.username}
-                                <button onClick={() => handleRemoveUser(user.username)}>Remove</button>
-                            </li>
-                        ))}
-                    </ul>
+                    <input
+                        type="text"
+                        value={removeUsername}
+                        onChange={(e) => setRemoveUsername(e.target.value)}
+                        placeholder="Remove user by username"
+                    />
+                    <button onClick={handleRemoveUser}>Remove</button>
                 </div>
                 <button onClick={onClose}>Close</button>
             </div>

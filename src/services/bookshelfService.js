@@ -8,8 +8,8 @@ const getBookshelves = async () => {
 };
 
 const getBooksInBookshelf = async (bookshelfId) => {
-    const response = await api.get(`${API_URL}/${bookshelfId}/books`);
-    return response.data;
+    const response = await api.get(`/shared-bookshelf-books/shared-bookshelves/${bookshelfId}`);
+    return response.data.map(bc => bc.book);
 };
 
 const createBookshelf = async (bookshelfData) => {
@@ -17,4 +17,27 @@ const createBookshelf = async (bookshelfData) => {
     return response.data;
 };
 
-export default { getBookshelves, getBooksInBookshelf, createBookshelf };
+const inviteUserToBookshelf = async (bookshelfId, username) => {
+    const response = await api.post(`${API_URL}/${bookshelfId}/invite?inviteeUsername=${username}`);
+    return response.data;
+};
+
+const removeUserFromBookshelf = async (bookshelfId, username) => {
+    const response = await api.delete(`${API_URL}/${bookshelfId}/remove?username=${username}`);
+    return response.data;
+};
+
+const getBookshelvesByUserId = async (userId) => {
+    const response = await api.get(`/user-bookshelf/${userId}`);
+    return response.data;
+};
+
+const addBookToBookshelf = async (bookshelfId, bookId) => {
+    const response = await api.post(`/shared-bookshelf-books`, {
+        sharedBookshelf: { id: bookshelfId },
+        book: { id: bookId }
+    });
+    return response.data;
+};
+
+export default { getBookshelves, getBooksInBookshelf, createBookshelf, inviteUserToBookshelf, removeUserFromBookshelf, getBookshelvesByUserId, addBookToBookshelf };

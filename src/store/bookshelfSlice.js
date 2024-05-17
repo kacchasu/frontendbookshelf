@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import bookshelfService from '../services/bookshelfService';
 
-export const fetchBookshelves = createAsyncThunk('bookshelves/fetchBookshelves', async () => {
-    const response = await bookshelfService.getBookshelves();
+export const fetchBookshelves = createAsyncThunk('bookshelves/fetchBookshelves', async (userId) => {
+    const response = await bookshelfService.getBookshelvesByUserId(userId);
     return response;
 });
 
@@ -13,6 +13,21 @@ export const fetchBooksInBookshelf = createAsyncThunk('bookshelves/fetchBooksInB
 
 export const createBookshelf = createAsyncThunk('bookshelves/createBookshelf', async (bookshelfData) => {
     const response = await bookshelfService.createBookshelf(bookshelfData);
+    return response;
+});
+
+export const inviteUserToBookshelf = createAsyncThunk('bookshelves/inviteUserToBookshelf', async ({ bookshelfId, username }) => {
+    const response = await bookshelfService.inviteUserToBookshelf(bookshelfId, username);
+    return response;
+});
+
+export const removeUserFromBookshelf = createAsyncThunk('bookshelves/removeUserFromBookshelf', async ({ bookshelfId, username }) => {
+    const response = await bookshelfService.removeUserFromBookshelf(bookshelfId, username);
+    return response;
+});
+
+export const addBookToBookshelf = createAsyncThunk('bookshelves/addBookToBookshelf', async ({ bookshelfId, bookId }) => {
+    const response = await bookshelfService.addBookToBookshelf(bookshelfId, bookId);
     return response;
 });
 
@@ -44,8 +59,17 @@ const bookshelfSlice = createSlice({
             })
             .addCase(fetchBookshelves.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.myBookshelves = action.payload.filter(bookshelf => bookshelf.userBookshelves.length > 0);
-                state.sharedBookshelves = action.payload.filter(bookshelf => bookshelf.userBookshelves.length === 0);
+                const myBookshelves = [];
+                const sharedBookshelves = [];
+                action.payload.forEach(item => {
+                    if (item.owner) {
+                        myBookshelves.push(item.sharedBookshelf);
+                    } else {
+                        sharedBookshelves.push(item.sharedBookshelf);
+                    }
+                });
+                state.myBookshelves = myBookshelves;
+                state.sharedBookshelves = sharedBookshelves;
             })
             .addCase(fetchBookshelves.rejected, (state, action) => {
                 state.isLoading = false;
@@ -70,6 +94,39 @@ const bookshelfSlice = createSlice({
                 state.myBookshelves.push(action.payload);
             })
             .addCase(createBookshelf.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.message;
+            })
+            .addCase(inviteUserToBookshelf.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(inviteUserToBookshelf.fulfilled, (state, action) => {
+                state.isLoading = false;
+                // Handle successful invite
+            })
+            .addCase(inviteUserToBookshelf.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.message;
+            })
+            .addCase(removeUserFromBookshelf.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(removeUserFromBookshelf.fulfilled, (state, action) => {
+                state.isLoading = false;
+                // Handle successful removal
+            })
+            .addCase(removeUserFromBookshelf.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.message;
+            })
+            .addCase(addBookToBookshelf.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(addBookToBookshelf.fulfilled, (state, action) => {
+                state.isLoading = false;
+                // Handle successful book addition
+            })
+            .addCase(addBookToBookshelf.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.error.message;
             });
