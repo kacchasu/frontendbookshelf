@@ -4,8 +4,8 @@ import { fetchBooks } from '../store/bookSlice';
 import { fetchCategories } from '../store/categorySlice';
 import { fetchBookshelves, addBookToBookshelf } from '../store/bookshelfSlice';
 import BookCard from '../components/BookCard';
-import BookForm from '../components/BookForm';
 import BookDetail from '../components/BookDetail';
+import CategorySidebar from '../components/CategorySidebar';
 
 const AllBooksPage = () => {
     const dispatch = useDispatch();
@@ -13,7 +13,6 @@ const AllBooksPage = () => {
     const categories = useSelector((state) => state.categories.categories);
     const { myBookshelves, sharedBookshelves } = useSelector((state) => state.bookshelves);
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [showBookForm, setShowBookForm] = useState(false);
     const [selectedBook, setSelectedBook] = useState(null);
     const [showAddToBookshelf, setShowAddToBookshelf] = useState(false);
     const [selectedBookshelf, setSelectedBookshelf] = useState(null);
@@ -25,17 +24,17 @@ const AllBooksPage = () => {
         dispatch(fetchBookshelves(userId));
     }, [dispatch]);
 
-    const handleCategoryChange = (category) => {
+    const handleCategoryChange = (categoryId) => {
         setSelectedCategories((prev) =>
-            prev.includes(category)
-                ? prev.filter((c) => c !== category)
-                : [...prev, category]
+            prev.includes(categoryId)
+                ? prev.filter((id) => id !== categoryId)
+                : [...prev, categoryId]
         );
     };
 
     const filteredBooks = books.filter((book) =>
         selectedCategories.length === 0 ||
-        book.categories.some((category) => selectedCategories.includes(category.name))
+        book.categories.some((category) => selectedCategories.includes(category.id))
     );
 
     const handleBookCardClick = (book) => {
@@ -57,40 +56,27 @@ const AllBooksPage = () => {
     };
 
     return (
-        <div>
-            <h1>All Books</h1>
-            <div className="category-selector">
-                <h4>Filter by Categories:</h4>
-                {categories.map((category) => (
-                    <label key={category.id}>
-                        <input
-                            type="checkbox"
-                            value={category.name}
-                            onChange={() => handleCategoryChange(category.name)}
-                        />
-                        {category.name}
-                    </label>
-                ))}
-            </div>
-            <button onClick={() => setShowBookForm(true)}>Add Book</button>
-            <div className="book-grid">
-                {filteredBooks.length > 0 ? (
-                    filteredBooks.map((book) => (
-                        <BookCard key={book.id} book={book} onClick={() => handleBookCardClick(book)} onAddToBookshelf={() => handleAddToBookshelf(book)} />
-                    ))
-                ) : (
-                    <p>No books available.</p>
+        <div className="all-books-page">
+            <CategorySidebar categories={categories} selectedCategories={selectedCategories} onCategoryChange={handleCategoryChange} />
+            <div className="book-content">
+                <h1>All Books</h1>
+                <div className="book-grid">
+                    {filteredBooks.length > 0 ? (
+                        filteredBooks.map((book) => (
+                            <BookCard key={book.id} book={book} onClick={() => handleBookCardClick(book)} onAddToBookshelf={() => handleAddToBookshelf(book)} />
+                        ))
+                    ) : (
+                        <p>No books available.</p>
+                    )}
+                </div>
+                {selectedBook && (
+                    <BookDetail
+                        book={selectedBook}
+                        onClose={() => setSelectedBook(null)}
+                    />
                 )}
-            </div>
-            {showBookForm && (
-                <BookForm onClose={() => setShowBookForm(false)} />
-            )}
-            {selectedBook && (
-                <BookDetail book={selectedBook} onClose={() => setSelectedBook(null)} />
-            )}
-            {showAddToBookshelf && (
-                <div className="modal">
-                    <div className="modal-content">
+                {showAddToBookshelf && (
+                    <div className="add-to-bookshelf">
                         <h2>Add {selectedBook.title} to a Bookshelf</h2>
                         <select onChange={(e) => setSelectedBookshelf(JSON.parse(e.target.value))}>
                             <option value="">Select a Bookshelf</option>
@@ -108,8 +94,8 @@ const AllBooksPage = () => {
                         <button onClick={handleAddBookToBookshelf}>Add to Bookshelf</button>
                         <button onClick={() => setShowAddToBookshelf(false)}>Cancel</button>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };

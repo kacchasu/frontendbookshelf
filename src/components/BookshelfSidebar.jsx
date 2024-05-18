@@ -32,7 +32,11 @@ const BookshelfSidebar = () => {
             <div>
                 <h2>My Bookshelves</h2>
                 {myBookshelves.map((bookshelf) => (
-                    <div key={bookshelf.id} onClick={() => handleSelectBookshelf(bookshelf)}>
+                    <div
+                        key={bookshelf.id}
+                        className={`bookshelf-item ${selectedBookshelf && selectedBookshelf.id === bookshelf.id ? 'selected' : ''}`}
+                        onClick={() => handleSelectBookshelf(bookshelf)}
+                    >
                         {bookshelf.name}
                     </div>
                 ))}
@@ -47,7 +51,11 @@ const BookshelfSidebar = () => {
             <div>
                 <h2>Shared Bookshelves</h2>
                 {sharedBookshelves.map((bookshelf) => (
-                    <div key={bookshelf.id} onClick={() => handleSelectBookshelf(bookshelf)}>
+                    <div
+                        key={bookshelf.id}
+                        className={`bookshelf-item ${selectedBookshelf && selectedBookshelf.id === bookshelf.id ? 'selected' : ''}`}
+                        onClick={() => handleSelectBookshelf(bookshelf)}
+                    >
                         {bookshelf.name}
                     </div>
                 ))}

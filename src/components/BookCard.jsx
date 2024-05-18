@@ -1,11 +1,11 @@
 import React from 'react';
 
-function BookCard({ book, onClick, onAddToBookshelf }) {
+function BookCard({ book, onClick, onAddToBookshelf, isSelected }) {
     return (
-        <div className="book-card" onClick={onClick}>
+        <div className={`book-card ${isSelected ? 'selected' : ''}`} onClick={onClick}>
             <h3>{book.title}</h3>
             <p>{book.author}</p>
-            <button onClick={(e) => { e.stopPropagation(); onAddToBookshelf(); }}>Add to Bookshelf</button>
+            <button onClick={onAddToBookshelf}>Add to Bookshelf</button>
         </div>
     );
 }

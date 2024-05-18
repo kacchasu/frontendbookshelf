@@ -121,10 +121,11 @@ button:hover {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.book-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+.book-card:hover, .book-card.selected {
+    background-color: #e0e0e0;
+    border-color: #6200ea;
 }
+
 
 .book-card img {
     width: 100%;
@@ -265,4 +266,151 @@ form button:hover {
 
 .book-card button:hover {
     background-color: #4500b5;
+}
+
+.all-books-page {
+    display: flex;
+    height: 100vh; /* Make sure the page takes the full height of the viewport */
+}
+
+.category-sidebar, .bookshelf-sidebar {
+    flex: 1;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+}
+.category-sidebar h2, .bookshelf-sidebar h2 {
+    margin-top: 0;
+}
+.category-item, .bookshelf-item {
+    display: block;
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+.category-item:hover, .bookshelf-item:hover {
+    background-color: #d0d0d0;
+}
+.category-item.selected, .bookshelf-item.selected {
+    background-color: #6200ea;
+    color: white;
+}
+
+.book-content {
+    flex: 3; /* Content area takes 2/3 of the space */
+    padding: 20px;
+    background-color: #ffffff; /* White background for the content area */
+    overflow-y: auto; /* Add vertical scroll if content overflows */
+}
+
+.category-sidebar h2, .book-content h1 {
+    margin-top: 0;
+}
+
+.category-sidebar label {
+    display: block;
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.category-sidebar label:hover {
+    background-color: #d0d0d0;
+}
+.category-item.selected {
+    background-color: #6200ea;
+    color: white;
+}
+
+.book-content .book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.book-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.book-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.book-card h3 {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.book-card p {
+    color: #666;
+    font-size: 0.9em;
+    margin: 5px 0;
+}
+
+.book-card button {
+    padding: 5px 10px;
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.book-card button:hover {
+    background-color: #4500b5;
+}
+
+.add-to-bookshelf {
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.add-to-bookshelf h2 {
+    margin-top: 0;
+}
+
+.add-to-bookshelf select, .add-to-bookshelf button {
+    margin-right: 10px;
+}
+
+.add-to-bookshelf button {
+    margin-top: 10px;
+}
+input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #5a00d2;
 }
