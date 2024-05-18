@@ -17,11 +17,11 @@ function CategorySelector({ selectedCategories, setSelectedCategories }) {
     }, []);
 
     const handleCategoryChange = (categoryId) => {
-        if (selectedCategories.includes(categoryId)) {
-            setSelectedCategories(selectedCategories.filter(id => id !== categoryId));
-        } else {
-            setSelectedCategories([...selectedCategories, categoryId]);
-        }
+        setSelectedCategories((prev) =>
+            prev.includes(categoryId)
+                ? prev.filter((id) => id !== categoryId)
+                : [...prev, categoryId]
+        );
     };
 
     return (

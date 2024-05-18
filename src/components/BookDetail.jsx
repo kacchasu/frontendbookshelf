@@ -8,7 +8,7 @@ function BookDetail({ book, onClose }) {
         const fetchBookCategories = async () => {
             try {
                 const categoriesResponse = await categoryService.getCategoriesByBookId(book.id);
-                setCategories(categoriesResponse.map(bc => bc.category));
+                setCategories(categoriesResponse);
             } catch (error) {
                 console.error('Failed to fetch book categories:', error);
             }

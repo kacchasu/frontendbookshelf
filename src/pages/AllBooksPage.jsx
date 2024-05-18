@@ -6,6 +6,7 @@ import { fetchBookshelves, addBookToBookshelf } from '../store/bookshelfSlice';
 import BookCard from '../components/BookCard';
 import BookForm from '../components/BookForm';
 import BookDetail from '../components/BookDetail';
+import CategorySelector from '../components/CategorySelector';
 
 const AllBooksPage = () => {
     const dispatch = useDispatch();
@@ -25,17 +26,17 @@ const AllBooksPage = () => {
         dispatch(fetchBookshelves(userId));
     }, [dispatch]);
 
-    const handleCategoryChange = (category) => {
+    const handleCategoryChange = (categoryId) => {
         setSelectedCategories((prev) =>
-            prev.includes(category)
-                ? prev.filter((c) => c !== category)
-                : [...prev, category]
+            prev.includes(categoryId)
+                ? prev.filter((c) => c !== categoryId)
+                : [...prev, categoryId]
         );
     };
 
     const filteredBooks = books.filter((book) =>
         selectedCategories.length === 0 ||
-        book.categories.some((category) => selectedCategories.includes(category.name))
+        (book.categories && book.categories.some((category) => selectedCategories.includes(category.id)))
     );
 
     const handleBookCardClick = (book) => {
@@ -59,18 +60,10 @@ const AllBooksPage = () => {
     return (
         <div>
             <h1>All Books</h1>
-            <div>
-                {categories.map((category) => (
-                    <label key={category.id}>
-                        <input
-                            type="checkbox"
-                            value={category.name}
-                            onChange={() => handleCategoryChange(category.name)}
-                        />
-                        {category.name}
-                    </label>
-                ))}
-            </div>
+            <CategorySelector
+                selectedCategories={selectedCategories}
+                setSelectedCategories={setSelectedCategories}
+            />
             <button onClick={() => setShowBookForm(true)}>Add Book</button>
             <div className="book-grid">
                 {filteredBooks.length > 0 ? (

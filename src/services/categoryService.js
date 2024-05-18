@@ -14,7 +14,7 @@ const getBooksByCategoryId = async (categoryId) => {
 
 const getCategoriesByBookId = async (bookId) => {
     const response = await api.get(`${API_URL}book-categories/books/${bookId}`);
-    return response.data;
+    return response.data.map(bc => bc.category);
 };
 
 export default { getAllCategories, getBooksByCategoryId, getCategoriesByBookId };
