@@ -7,6 +7,9 @@ const authService = {
     register: (data) => {
         return api.post('/users/register', data);
     },
+    getUserByUsername: (username) => {
+        return api.get(`/users/${username}`);
+    }
 };
 
 export default authService;

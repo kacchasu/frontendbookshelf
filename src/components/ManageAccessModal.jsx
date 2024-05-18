@@ -24,7 +24,7 @@ const ManageAccessModal = ({ bookshelf, onClose }) => {
     return (
         <div className="modal">
             <div className="modal-content">
-                <h3>Manage Access</h3>
+                <h3>Manage Access for {bookshelf.name}</h3>
                 <div>
                     <input
                         type="text"

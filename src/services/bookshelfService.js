@@ -27,8 +27,8 @@ const removeUserFromBookshelf = async (bookshelfId, username) => {
     return response.data;
 };
 
-const getBookshelvesByUserId = async (userId) => {
-    const response = await api.get(`/user-bookshelf/${userId}`);
+const getBookshelvesByUsername = async (username) => {
+    const response = await api.get(`/user-bookshelf/${username}`);
     return response.data;
 };
 
@@ -40,4 +40,4 @@ const addBookToBookshelf = async (bookshelfId, bookId) => {
     return response.data;
 };
 
-export default { getBookshelves, getBooksInBookshelf, createBookshelf, inviteUserToBookshelf, removeUserFromBookshelf, getBookshelvesByUserId, addBookToBookshelf };
+export default { getBookshelves, getBooksInBookshelf, createBookshelf, inviteUserToBookshelf, removeUserFromBookshelf, getBookshelvesByUsername, addBookToBookshelf };

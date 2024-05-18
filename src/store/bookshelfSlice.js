@@ -1,9 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import bookshelfService from '../services/bookshelfService';
+import userService from '../services/authService';
 
-export const fetchBookshelves = createAsyncThunk('bookshelves/fetchBookshelves', async (userId) => {
-    const response = await bookshelfService.getBookshelvesByUserId(userId);
-    return response;
+export const fetchBookshelves = createAsyncThunk('bookshelves/fetchBookshelves', async (_, { getState }) => {
+    const { user } = getState();
+    const userInfo = await userService.getUserByUsername(user.username);
+    const response = await bookshelfService.getBookshelvesByUsername(userInfo.data.id);
+    return response.map(item => ({
+        ...item.sharedBookshelf,
+        owner: item.owner
+    }));
 });
 
 export const fetchBooksInBookshelf = createAsyncThunk('bookshelves/fetchBooksInBookshelf', async (bookshelfId) => {
@@ -61,9 +67,8 @@ const bookshelfSlice = createSlice({
                 state.isLoading = false;
                 const myBookshelves = [];
                 const sharedBookshelves = [];
-                action.payload.forEach(item => {
-                    const bookshelf = { ...item.sharedBookshelf, owner: item.owner };
-                    if (item.owner) {
+                action.payload.forEach(bookshelf => {
+                    if (bookshelf.owner) {
                         myBookshelves.push(bookshelf);
                     } else {
                         sharedBookshelves.push(bookshelf);
