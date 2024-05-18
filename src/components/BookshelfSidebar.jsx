@@ -8,7 +8,6 @@ const BookshelfSidebar = () => {
     const [newBookshelfName, setNewBookshelfName] = useState('');
 
     useEffect(() => {
-        // Assume userId is available in the state (e.g., from user authentication state)
         const userId = 1; // Replace with actual user ID
         dispatch(fetchBookshelves(userId));
     }, [dispatch]);

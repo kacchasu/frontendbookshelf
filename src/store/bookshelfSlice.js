@@ -62,10 +62,11 @@ const bookshelfSlice = createSlice({
                 const myBookshelves = [];
                 const sharedBookshelves = [];
                 action.payload.forEach(item => {
+                    const bookshelf = { ...item.sharedBookshelf, owner: item.owner };
                     if (item.owner) {
-                        myBookshelves.push(item.sharedBookshelf);
+                        myBookshelves.push(bookshelf);
                     } else {
-                        sharedBookshelves.push(item.sharedBookshelf);
+                        sharedBookshelves.push(bookshelf);
                     }
                 });
                 state.myBookshelves = myBookshelves;
@@ -91,7 +92,7 @@ const bookshelfSlice = createSlice({
             })
             .addCase(createBookshelf.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.myBookshelves.push(action.payload);
+                state.myBookshelves.push({ ...action.payload, owner: true });
             })
             .addCase(createBookshelf.rejected, (state, action) => {
                 state.isLoading = false;
