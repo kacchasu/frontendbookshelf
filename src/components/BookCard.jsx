@@ -5,7 +5,7 @@ function BookCard({ book, onClick, onAddToBookshelf }) {
         <div className="book-card" onClick={onClick}>
             <h3>{book.title}</h3>
             <p>{book.author}</p>
-            <button onClick={onAddToBookshelf}>Add to Bookshelf</button>
+            <button onClick={(e) => { e.stopPropagation(); onAddToBookshelf(); }}>Add to Bookshelf</button>
         </div>
     );
 }

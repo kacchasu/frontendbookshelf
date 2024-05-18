@@ -1,33 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { inviteUserToBookshelf, removeUserFromBookshelf, fetchBookshelfUsers } from '../store/bookshelfSlice';
+import { inviteUserToBookshelf, removeUserFromBookshelf } from '../store/bookshelfSlice';
+import api from '../services/api';
 
 const ManageAccessModal = ({ bookshelf, onClose }) => {
     const dispatch = useDispatch();
+    const { username } = useSelector((state) => state.user);
     const [inviteUsername, setInviteUsername] = useState('');
     const [removeUsername, setRemoveUsername] = useState('');
-    const { bookshelfUsers } = useSelector((state) => state.bookshelves);
-    const { username } = useSelector((state) => state.user);
+    const [bookshelfUsers, setBookshelfUsers] = useState([]);
 
     useEffect(() => {
-        if (bookshelf) {
-            dispatch(fetchBookshelfUsers(bookshelf.id));
-        }
-    }, [dispatch, bookshelf]);
+        const fetchBookshelfUsers = async () => {
+            try {
+                const response = await api.get(`/user-bookshelf/bookshelf-info/${bookshelf.id}`);
+                setBookshelfUsers(response.data);
+            } catch (error) {
+                console.error('Failed to fetch bookshelf users:', error);
+            }
+        };
 
-    const handleInviteUser = () => {
+        fetchBookshelfUsers();
+    }, [bookshelf.id]);
+
+    const handleInviteUser = async () => {
         if (inviteUsername.trim() && inviteUsername !== username) {
-            dispatch(inviteUserToBookshelf({ bookshelfId: bookshelf.id, username: inviteUsername }));
-            setInviteUsername('');
-        } else {
-            alert("You cannot invite yourself to your own bookshelf.");
+            try {
+                await dispatch(inviteUserToBookshelf({ bookshelfId: bookshelf.id, username: inviteUsername }));
+                const response = await api.get(`/user-bookshelf/bookshelf-info/${bookshelf.id}`);
+                setBookshelfUsers(response.data);
+                setInviteUsername('');
+            } catch (error) {
+                console.error('Failed to invite user:', error);
+            }
         }
     };
 
-    const handleRemoveUser = () => {
+    const handleRemoveUser = async () => {
         if (removeUsername.trim()) {
-            dispatch(removeUserFromBookshelf({ bookshelfId: bookshelf.id, username: removeUsername }));
-            setRemoveUsername('');
+            try {
+                await dispatch(removeUserFromBookshelf({ bookshelfId: bookshelf.id, username: removeUsername }));
+                const response = await api.get(`/user-bookshelf/bookshelf-info/${bookshelf.id}`);
+                setBookshelfUsers(response.data);
+                setRemoveUsername('');
+            } catch (error) {
+                console.error('Failed to remove user:', error);
+            }
         }
     };
 
@@ -53,11 +71,11 @@ const ManageAccessModal = ({ bookshelf, onClose }) => {
                     />
                     <button onClick={handleRemoveUser}>Remove</button>
                 </div>
-                <h4>Users in this Bookshelf:</h4>
+                <h4>Current Users</h4>
                 <ul>
-                    {bookshelfUsers.map(user => (
-                        <li key={user.id}>
-                            {user.user.username} {user.owner ? "(Owner)" : ""}
+                    {bookshelfUsers.map(userBookshelf => (
+                        <li key={userBookshelf.id}>
+                            {userBookshelf.user.username} {userBookshelf.owner && '(Owner)'}
                         </li>
                     ))}
                 </ul>

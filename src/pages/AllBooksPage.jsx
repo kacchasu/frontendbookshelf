@@ -59,7 +59,8 @@ const AllBooksPage = () => {
     return (
         <div>
             <h1>All Books</h1>
-            <div>
+            <div className="category-selector">
+                <h4>Filter by Categories:</h4>
                 {categories.map((category) => (
                     <label key={category.id}>
                         <input
@@ -82,34 +83,31 @@ const AllBooksPage = () => {
                 )}
             </div>
             {showBookForm && (
-                <BookForm
-                    onClose={() => setShowBookForm(false)}
-                />
+                <BookForm onClose={() => setShowBookForm(false)} />
             )}
             {selectedBook && (
-                <BookDetail
-                    book={selectedBook}
-                    onClose={() => setSelectedBook(null)}
-                />
+                <BookDetail book={selectedBook} onClose={() => setSelectedBook(null)} />
             )}
             {showAddToBookshelf && (
-                <div className="add-to-bookshelf">
-                    <h2>Add {selectedBook.title} to a Bookshelf</h2>
-                    <select onChange={(e) => setSelectedBookshelf(JSON.parse(e.target.value))}>
-                        <option value="">Select a Bookshelf</option>
-                        {myBookshelves.map((bookshelf) => (
-                            <option key={bookshelf.id} value={JSON.stringify(bookshelf)}>
-                                {bookshelf.name}
-                            </option>
-                        ))}
-                        {sharedBookshelves.map((bookshelf) => (
-                            <option key={bookshelf.id} value={JSON.stringify(bookshelf)}>
-                                {bookshelf.name}
-                            </option>
-                        ))}
-                    </select>
-                    <button onClick={handleAddBookToBookshelf}>Add to Bookshelf</button>
-                    <button onClick={() => setShowAddToBookshelf(false)}>Cancel</button>
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>Add {selectedBook.title} to a Bookshelf</h2>
+                        <select onChange={(e) => setSelectedBookshelf(JSON.parse(e.target.value))}>
+                            <option value="">Select a Bookshelf</option>
+                            {myBookshelves.map((bookshelf) => (
+                                <option key={bookshelf.id} value={JSON.stringify(bookshelf)}>
+                                    {bookshelf.name}
+                                </option>
+                            ))}
+                            {sharedBookshelves.map((bookshelf) => (
+                                <option key={bookshelf.id} value={JSON.stringify(bookshelf)}>
+                                    {bookshelf.name}
+                                </option>
+                            ))}
+                        </select>
+                        <button onClick={handleAddBookToBookshelf}>Add to Bookshelf</button>
+                        <button onClick={() => setShowAddToBookshelf(false)}>Cancel</button>
+                    </div>
                 </div>
             )}
         </div>

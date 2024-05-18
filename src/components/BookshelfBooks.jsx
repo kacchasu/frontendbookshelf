@@ -30,7 +30,7 @@ const BookshelfBooks = () => {
                     <div className="book-grid">
                         {booksInSelectedBookshelf.length > 0 ? (
                             booksInSelectedBookshelf.map((book) => (
-                                book && <BookCard key={book.id} book={book} />
+                                <BookCard key={book.id} book={book} />
                             ))
                         ) : (
                             <p>No books available.</p>

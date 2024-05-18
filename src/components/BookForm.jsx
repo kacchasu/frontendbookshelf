@@ -54,7 +54,7 @@ function BookForm({ onClose }) {
                         type="text"
                         value={categories}
                         onChange={(e) => setCategories(e.target.value)}
-                        placeholder="Comma separated categories"
+                        placeholder="Comma-separated list of categories"
                     />
                 </label>
                 <button type="submit">Add Book</button>
