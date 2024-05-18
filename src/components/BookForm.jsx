@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import bookService from '../services/bookService';
+import { useDispatch } from 'react-redux';
+import { saveBook } from '../store/bookSlice';
+import { fetchCategories } from '../store/categorySlice';
 
 function BookForm({ onClose }) {
+    const dispatch = useDispatch();
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [description, setDescription] = useState('');
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -15,10 +18,11 @@ function BookForm({ onClose }) {
             author,
             imageUrl,
             description,
-            categories: categories.map((cat) => ({ name: cat }))
+            categories: categories.split(',').map(cat => ({ name: cat.trim() })),
         };
         try {
-            await bookService.saveBook(newBook);
+            await dispatch(saveBook(newBook));
+            await dispatch(fetchCategories()); // Update categories in the store
             onClose();
         } catch (error) {
             console.error('Failed to save book:', error);
@@ -48,8 +52,9 @@ function BookForm({ onClose }) {
                     Categories:
                     <input
                         type="text"
-                        value={categories.join(', ')}
-                        onChange={(e) => setCategories(e.target.value.split(',').map((cat) => cat.trim()))}
+                        value={categories}
+                        onChange={(e) => setCategories(e.target.value)}
+                        placeholder="Comma separated categories"
                     />
                 </label>
                 <button type="submit">Add Book</button>

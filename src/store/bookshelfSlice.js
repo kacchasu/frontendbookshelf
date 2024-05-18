@@ -34,14 +34,21 @@ export const removeUserFromBookshelf = createAsyncThunk('bookshelves/removeUserF
 
 export const addBookToBookshelf = createAsyncThunk('bookshelves/addBookToBookshelf', async ({ bookshelfId, bookId }) => {
     const response = await bookshelfService.addBookToBookshelf(bookshelfId, bookId);
+    return { bookshelfId, book: response };
+});
+
+export const fetchBookshelfUsers = createAsyncThunk('bookshelves/fetchBookshelfUsers', async (bookshelfId) => {
+    const response = await bookshelfService.getBookshelfUsers(bookshelfId);
     return response;
 });
+
 
 const initialState = {
     myBookshelves: [],
     sharedBookshelves: [],
     selectedBookshelf: null,
     booksInSelectedBookshelf: [],
+    bookshelfUsers: [],
     isLoading: false,
     error: null,
 };
@@ -56,6 +63,7 @@ const bookshelfSlice = createSlice({
         clearSelectedBookshelf(state) {
             state.selectedBookshelf = null;
             state.booksInSelectedBookshelf = [];
+            state.bookshelfUsers = [];
         },
     },
     extraReducers: (builder) => {
@@ -108,7 +116,12 @@ const bookshelfSlice = createSlice({
             })
             .addCase(inviteUserToBookshelf.fulfilled, (state, action) => {
                 state.isLoading = false;
-                // Handle successful invite
+                state.bookshelfUsers.push({
+                    user: {
+                        username: action.meta.arg.username,
+                    },
+                    owner: false,
+                });
             })
             .addCase(inviteUserToBookshelf.rejected, (state, action) => {
                 state.isLoading = false;
@@ -119,7 +132,9 @@ const bookshelfSlice = createSlice({
             })
             .addCase(removeUserFromBookshelf.fulfilled, (state, action) => {
                 state.isLoading = false;
-                // Handle successful removal
+                state.bookshelfUsers = state.bookshelfUsers.filter(
+                    (user) => user.user.username !== action.meta.arg.username
+                );
             })
             .addCase(removeUserFromBookshelf.rejected, (state, action) => {
                 state.isLoading = false;
@@ -130,9 +145,22 @@ const bookshelfSlice = createSlice({
             })
             .addCase(addBookToBookshelf.fulfilled, (state, action) => {
                 state.isLoading = false;
-                // Handle successful book addition
+                if (state.selectedBookshelf?.id === action.payload.bookshelfId) {
+                    state.booksInSelectedBookshelf.push(action.payload.book);
+                }
             })
             .addCase(addBookToBookshelf.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.message;
+            })
+            .addCase(fetchBookshelfUsers.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchBookshelfUsers.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.bookshelfUsers = action.payload;
+            })
+            .addCase(fetchBookshelfUsers.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.error.message;
             });

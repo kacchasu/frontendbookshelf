@@ -6,8 +6,9 @@ export const fetchBooks = createAsyncThunk('books/fetchBooks', async () => {
     return response;
 });
 
-export const saveBook = createAsyncThunk('books/saveBook', async (bookData) => {
+export const saveBook = createAsyncThunk('books/saveBook', async (bookData, { dispatch }) => {
     const response = await bookService.saveBook(bookData);
+    dispatch(fetchBooks()); // Refetch books after saving
     return response;
 });
 

@@ -9,7 +9,7 @@ const getBookshelves = async () => {
 
 const getBooksInBookshelf = async (bookshelfId) => {
     const response = await api.get(`/shared-bookshelf-books/shared-bookshelves/${bookshelfId}`);
-    return response.data.map(bc => bc.book).filter(book => book); // Ensure books are filtered correctly
+    return response.data.map(bc => bc.book);
 };
 
 const createBookshelf = async (bookshelfData) => {
@@ -37,7 +37,12 @@ const addBookToBookshelf = async (bookshelfId, bookId) => {
         sharedBookshelf: { id: bookshelfId },
         book: { id: bookId }
     });
+    return response.data.book;
+};
+
+const getBookshelfUsers = async (bookshelfId) => {
+    const response = await api.get(`/user-bookshelf/bookshelf-info/${bookshelfId}`);
     return response.data;
 };
 
-export default { getBookshelves, getBooksInBookshelf, createBookshelf, inviteUserToBookshelf, removeUserFromBookshelf, getBookshelvesByUsername, addBookToBookshelf };
+export default { getBookshelves, getBooksInBookshelf, createBookshelf, inviteUserToBookshelf, removeUserFromBookshelf, getBookshelvesByUsername, addBookToBookshelf, getBookshelfUsers };

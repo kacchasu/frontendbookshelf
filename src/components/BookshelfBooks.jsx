@@ -21,24 +21,30 @@ const BookshelfBooks = () => {
 
     return (
         <div className="bookshelf-books">
-            <h2>{selectedBookshelf?.name}</h2>
-            {selectedBookshelf?.owner && (
-                <button onClick={handleManageAccessClick}>Manage Access</button>
-            )}
-            <div className="book-grid">
-                {booksInSelectedBookshelf.length > 0 ? (
-                    booksInSelectedBookshelf.map((book) => (
-                        book && <BookCard key={book.id} book={book} />
-                    ))
-                ) : (
-                    <p>No books available.</p>
-                )}
-            </div>
-            {showManageAccess && (
-                <ManageAccessModal
-                    bookshelf={selectedBookshelf}
-                    onClose={() => setShowManageAccess(false)}
-                />
+            {selectedBookshelf ? (
+                <>
+                    <h2>{selectedBookshelf.name}</h2>
+                    {selectedBookshelf.owner && (
+                        <button onClick={handleManageAccessClick}>Manage Access</button>
+                    )}
+                    <div className="book-grid">
+                        {booksInSelectedBookshelf.length > 0 ? (
+                            booksInSelectedBookshelf.map((book) => (
+                                book && <BookCard key={book.id} book={book} />
+                            ))
+                        ) : (
+                            <p>No books available.</p>
+                        )}
+                    </div>
+                    {showManageAccess && (
+                        <ManageAccessModal
+                            bookshelf={selectedBookshelf}
+                            onClose={() => setShowManageAccess(false)}
+                        />
+                    )}
+                </>
+            ) : (
+                <p>Select a bookshelf to view its books.</p>
             )}
         </div>
     );

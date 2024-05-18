@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { inviteUserToBookshelf, removeUserFromBookshelf } from '../store/bookshelfSlice';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { inviteUserToBookshelf, removeUserFromBookshelf, fetchBookshelfUsers } from '../store/bookshelfSlice';
 
 const ManageAccessModal = ({ bookshelf, onClose }) => {
     const dispatch = useDispatch();
     const [inviteUsername, setInviteUsername] = useState('');
     const [removeUsername, setRemoveUsername] = useState('');
+    const { bookshelfUsers } = useSelector((state) => state.bookshelves);
+    const { username } = useSelector((state) => state.user);
+
+    useEffect(() => {
+        if (bookshelf) {
+            dispatch(fetchBookshelfUsers(bookshelf.id));
+        }
+    }, [dispatch, bookshelf]);
 
     const handleInviteUser = () => {
-        if (inviteUsername.trim()) {
+        if (inviteUsername.trim() && inviteUsername !== username) {
             dispatch(inviteUserToBookshelf({ bookshelfId: bookshelf.id, username: inviteUsername }));
             setInviteUsername('');
+        } else {
+            alert("You cannot invite yourself to your own bookshelf.");
         }
     };
 
@@ -43,6 +53,14 @@ const ManageAccessModal = ({ bookshelf, onClose }) => {
                     />
                     <button onClick={handleRemoveUser}>Remove</button>
                 </div>
+                <h4>Users in this Bookshelf:</h4>
+                <ul>
+                    {bookshelfUsers.map(user => (
+                        <li key={user.id}>
+                            {user.user.username} {user.owner ? "(Owner)" : ""}
+                        </li>
+                    ))}
+                </ul>
                 <button onClick={onClose}>Close</button>
             </div>
         </div>
