@@ -97,7 +97,7 @@ const AllBooksPage = () => {
             )}
             {showAddToBookshelf && (
                 <div className="add-to-bookshelf">
-                    <h2>Add {selectedBook.title} to a Bookshelf</h2>
+                    <h2>Add {selectedBook?.title} to a Bookshelf</h2>
                     <select onChange={(e) => setSelectedBookshelf(JSON.parse(e.target.value))}>
                         <option value="">Select a Bookshelf</option>
                         {myBookshelves.map((bookshelf) => (

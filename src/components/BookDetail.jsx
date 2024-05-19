@@ -20,7 +20,7 @@ function BookDetail({ book, onClose }) {
     return (
         <div className="book-detail">
             <button onClick={onClose}>Close</button>
-            <h2>{book.title}</h2>
+            <h2>{book?.title}</h2>
             <img src={book.imageUrl} alt={book.title} style={{ width: '200px', height: '300px' }} />
             <p>{book.author}</p>
             <p>{book.description}</p>

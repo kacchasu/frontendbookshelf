@@ -342,6 +342,9 @@ form button:hover {
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
 }
+.bookshelf-books button {
+    visibility: hidden;
+}
 
 .book-card:hover {
     transform: scale(1.05);
